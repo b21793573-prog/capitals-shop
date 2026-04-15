@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Capitals Shop</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial;
+  background: radial-gradient(circle at top, #0b1a3a, #05070f);
+  color: white;
+}
+
+/* HEADER */
+header {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px 30px;
+  position: sticky;
+  top: 0;
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(10px);
+}
+
+/* PRODUCTS */
+.products {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  padding: 30px;
+}
+
+/* CARD */
+.product {
+  background: rgba(255,255,255,0.06);
+  padding: 15px;
+  border-radius: 15px;
+  text-align: center;
+  transition: 0.3s;
+  animation: fade 0.5s ease;
+}
+
+.product:hover {
+  transform: scale(1.05);
+}
+
+@keyframes fade {
+  from {opacity: 0; transform: translateY(20px);}
+  to {opacity: 1; transform: translateY(0);}
+}
+
+/* BUTTON */
+button {
+  background: #C8102E;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+/* CART */
+.cart {
+  position: fixed;
+  right: -350px;
+  top: 0;
+  width: 300px;
+  height: 100%;
+  background: #111;
+  padding: 20px;
+  transition: 0.4s;
+}
+
+.cart.open {
+  right: 0;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h2>Capitals Shop</h2>
+  <button onclick="openCart()">🛒 <span id="count">0</span></button>
+</header>
+
+<div class="products" id="products"></div>
+
+<div class="cart" id="cart">
+  <h3>Корзина</h3>
+  <ul id="list"></ul>
+  <p id="total"></p>
+  <button onclick="closeCart()">Закрыть</button>
+</div>
+
+<script>
+let cart = [];
+
+/* ТОВАРЫ */
+const products = [
+  {
+    name: "Ovechkin Jersey",
+    price: 25000,
+    img: "https://source.unsplash.com/400x400/?hockey-jersey"
+  },
+  {
+    name: "Capitals Hoodie",
+    price: 18000,
+    img: "https://source.unsplash.com/400x400/?hoodie,sports"
+  },
+  {
+    name: "Capitals Cap",
+    price: 8000,
+    img: "https://source.unsplash.com/400x400/?cap,hockey"
+  },
+  {
+    name: "Away Jersey",
+    price: 26000,
+    img: "https://source.unsplash.com/400x400/?ice-hockey"
+  }
+];
+
+const box = document.getElementById("products");
+
+products.forEach((p, i) => {
+  const div = document.createElement("div");
+  div.className = "product";
+  div.style.animationDelay = (i * 0.1) + "s";
+
+  div.innerHTML = `
+    <img src="${p.img}" width="100%" style="border-radius:10px">
+    <h4>${p.name}</h4>
+    <p>${p.price} ₸</p>
+    <button onclick="add('${p.name}', ${p.price})">Купить</button>
+  `;
+
+  box.appendChild(div);
+});
+
+/* КОРЗИНА */
+function add(name, price) {
+  cart.push({name, price});
+  update();
+}
+
+function update() {
+  const list = document.getElementById("list");
+  const total = document.getElementById("total");
+  const count = document.getElementById("count");
+
+  list.innerHTML = "";
+  let sum = 0;
+
+  cart.forEach(i => {
+    const li = document.createElement("li");
+    li.textContent = i.name + " - " + i.price + " ₸";
+    list.appendChild(li);
+    sum += i.price;
+  });
+
+  total.textContent = "Итого: " + sum + " ₸";
+  count.textContent = cart.length;
+}
+
+/* CART UI */
+function openCart() {
+  document.getElementById("cart").classList.add("open");
+}
+
+function closeCart() {
+  document.getElementById("cart").classList.remove("open");
+}
+</script>
+
+</body>
+</html>
